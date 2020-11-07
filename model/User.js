@@ -26,7 +26,7 @@ const userSchema = new mongoose.Schema({
         required: true
     },
     favorites: {
-        type: [Buffer],
+        type: Object,
         max: 32
     },
     profilepicture: {

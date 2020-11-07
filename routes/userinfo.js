@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const auth = require('./verifyToken');
 const User = require("../model/User");
-const Post = require("../model/Post");
 const { userChangeValidation } = require("../validation");
+const { compareSync } = require('bcryptjs');
 
 
 router.get('/ping', (req,res) => {
@@ -31,9 +31,22 @@ router.post('/edituser', auth, async (req,res) => {
 
     const {error} = userChangeValidation(req.body);
     if(error) return res.status(400).send(error)
+    let bioData = null;
+    let favData = null;
+    if(req.body.biography) 
+    {
+        console.log(req.user._id)
+        bioData = await User.findByIdAndUpdate(req.user._id, {biography: req.body.biography});
+    }
+    if(req.body.favorites)
+    {
+        favData = await User.findByIdAndUpdate(req.user._id, {favorites: req.body.favorites});
+    }
 
-    if(req.body.biography) let bioData = await User.findByIdAndUpdate(req.user._id, {biography: req.body.biography});
-    if(req.body.favorites) let favData = await User.findByIdAndRemove(req.user._id, {favorites: req.body.favorites});
+    res.send({
+        "biography": req.body.biography,
+        "favorites": req.body.favorites
+    })
 
 });
 

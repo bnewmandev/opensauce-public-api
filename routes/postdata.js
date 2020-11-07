@@ -1,9 +1,9 @@
 const router = require('express').Router();
 const User = require("../model/User");
 const Post = require("../model/Post");
+const Comment = require("../model/Comment");
 const auth = require('./verifyToken');
 const { postValidation } = require("../validation");
-const { updateOne } = require('../model/User');
 
 router.post('/ping', (req,res) => {
     res.send("Pong!")

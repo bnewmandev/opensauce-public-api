@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const postSchema = new mongoose.Schema({
+const commentScheme = new mongoose.Schema({
     title: {
         type: String,
         required: true,
@@ -8,24 +8,19 @@ const postSchema = new mongoose.Schema({
         max: 32
     },
     user: {
-        type: String,
+        type: String
     },
     body: {
         type: String,
         required: true,
-        max: 4096,
+        max: 2048,
         min: 8
     },
     date: {
         type: Number,
     },
-    image: {
+    postid: {
         type: String
-    },
-    comments: {
-        type: [Buffer],
     }
 
-});
-
-module.exports = mongoose.model("Post", postSchema);
+})

@@ -102,7 +102,8 @@ router.post('/login', async (req, res) => {
         date: user.date,
         favorites: user.favorites,
         profilepicture: user.profilepicture,
-        biography: user.bio
+        biography: user.bio,
+        accesslevel: user.accesslevel
     }, process.env.TOKEN_SECRET);
 
     res.header('auth-token', token);

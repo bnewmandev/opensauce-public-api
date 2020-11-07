@@ -32,12 +32,12 @@ router.post('/new', auth, async (req,res) => {
         
         let postList = u1.posts;
         console.log(postList);
-        postList.push(post.id);
+        postList.push(post);
         console.log("try");
         let doc = await User.findOneAndUpdate({username: req.user.username}, {posts: postList});
         const newPost = await post.save();
 
-        res.send(post)
+        res.send(post);
     } catch (err) {
         console.log("oof");
         res.status(400).send(err);

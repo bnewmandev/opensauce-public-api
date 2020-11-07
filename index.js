@@ -7,7 +7,7 @@ const mongoose = require("mongoose");
 const authRoute = require("./routes/auth");
 const userInfoRoute = require("./routes/userinfo");
 const postRoute = require("./routes/postdata");
-const commentRoute = require("./routes/commentdata")
+const commentRoute = require("./routes/commentdata");
 
 //Imports from .env
 dotenv.config();

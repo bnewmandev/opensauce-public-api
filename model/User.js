@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema({
         max: 1024
     },
     posts: {
-        type: [String]
+        type: [Buffer]
     }
 });
 

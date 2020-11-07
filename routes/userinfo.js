@@ -15,7 +15,11 @@ router.get('/userinfo', auth, (req, res) => {
             username: req.user.username,
             name: req.user.name,
             email: req.user.email,
-            date: req.user.date
+            date: req.user.date,
+            favorites: req.user.favorites,
+            profilepicture: req.user.profilepicture,
+            biography: req.user.biography,
+            posts: req.user.posts
     });
 });
 

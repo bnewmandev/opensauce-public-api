@@ -2,8 +2,9 @@ const router = require('express').Router();
 const User = require("../model/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { registerValidation, loginValidation } = require("../validation");
+const { registerValidation, loginValidation, passwordValidation } = require("../validation");
 const dotenv = require("dotenv");
+const auth = require('./verifyToken');
 
 
 
@@ -96,9 +97,23 @@ router.post('/login', async (req, res) => {
 
     res.header('auth-token', token);
 
-    res.send("Login Successful!");
+    res.send("Login Successful");
 });
 
+
+router.post('/changepassword', auth, async (req,res) => {
+
+    const user = await User.findById(req.user._id)
+    const {error} = passwordValidation(req.body);
+    if(error) return res.status(400).send(error)
+    console.log(user.password);
+    const salt = await bcrypt.genSalt(10);
+    const hpass = await bcrypt.hash(req.body.newpassword, salt);
+
+    const doc = await User.findByIdAndUpdate(req.user._id, {password: hpass});
+
+    res.send("Password Changed Successfully");
+})
 
 
 //Exports the file as a module

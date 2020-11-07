@@ -68,6 +68,7 @@ router.post("/register", async (req,res) => {
 
     try {
         const newUser = await user.save();
+        const newSearch = await search.save();
         res.send({user: user._id});
     }
     catch(err) {

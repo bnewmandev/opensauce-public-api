@@ -24,7 +24,16 @@ const loginValidation = (data) => {
 const postValidation = (data) => {
     const schema = {
         title: Joi.string().min(8).max(32).required(),
-        body: Joi.string().required()
+        body: Joi.string().min(8).max(4096).required()
+    };
+    return Joi.validate(data, schema)
+}
+
+//Comment Validation
+const commentValidation = (data) => {
+    const schema = {
+        title: Joi.string().max(32).min(8).required(),
+        body: Joi.string().max(2048).min(8).required()
     };
     return Joi.validate(data, schema)
 }
@@ -33,3 +42,4 @@ const postValidation = (data) => {
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.postValidation = postValidation;
+module.exports.commentValidation = commentValidation;

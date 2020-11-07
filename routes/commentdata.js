@@ -6,6 +6,14 @@ const { postValidation } = require("../validation");
 
 router.post("/ping", (req,res) => {
     res.send("Pong!");
+});
+
+router.post("/new", auth, async (req,res) => {
+
+    let d = new Date();
+    let epoch = d.getTime();
+
+    
 })
 
 module.exports = router;

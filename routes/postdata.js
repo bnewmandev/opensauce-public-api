@@ -4,6 +4,7 @@ const Post = require("../model/Post");
 const Comment = require("../model/Comment");
 const auth = require('./verifyToken');
 const { postValidation, deleteUserValidation } = require("../validation");
+const Search = require('../model/Search');
 
 router.post('/ping', (req,res) => {
     res.send("Pong!")
@@ -26,6 +27,14 @@ router.post('/new', auth, async (req,res) => {
         comments: []
     });
     console.log(post)
+
+    const searchRecord = new Search({
+        type: "Post",
+        referenceid: post._id,
+        name: post.title,
+        link: `/posts/${post._id}`
+    });
+
     try {
         
         const u1 = await User.findOne({username: req.user.username})
@@ -36,7 +45,7 @@ router.post('/new', auth, async (req,res) => {
         console.log("try");
         let doc = await User.findOneAndUpdate({username: req.user.username}, {posts: postList});
         const newPost = await post.save();
-
+        const newRecord = await searchRecord.save();
         res.send(post);
     } catch (err) {
         console.log("oof");

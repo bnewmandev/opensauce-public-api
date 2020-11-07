@@ -40,7 +40,11 @@ const userSchema = new mongoose.Schema({
         max: 1024
     },
     posts: {
-        type: [Buffer]
+        type: [Object]
+    },
+    accesslevel: {
+        type: Number,
+        default: 0
     }
 });
 

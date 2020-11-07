@@ -2,7 +2,6 @@ const router = require('express').Router();
 const auth = require('./verifyToken');
 const User = require("../model/User");
 const { userChangeValidation } = require("../validation");
-const { compareSync } = require('bcryptjs');
 
 
 router.get('/ping', (req,res) => {
@@ -50,4 +49,4 @@ router.post('/edituser', auth, async (req,res) => {
 
 });
 
-module.exports = router; 
+module.exports = router;

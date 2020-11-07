@@ -8,6 +8,7 @@ const authRoute = require("./routes/auth");
 const userInfoRoute = require("./routes/userinfo");
 const postRoute = require("./routes/postdata");
 const commentRoute = require("./routes/commentdata");
+const searchRoute = require("./routes/searchquery");
 
 //Imports from .env
 dotenv.config();
@@ -29,6 +30,7 @@ app.use('/api/user', authRoute);
 app.use('/api/data', userInfoRoute);
 app.use('/api/post', postRoute);
 app.use('/api/comment', commentRoute);
+app.use('/api/search', searchRoute);
 
 //sets port to 3000 and outputs success message to console
 app.listen(3000, () => console.log("Server Online")); 

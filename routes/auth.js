@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const { registerValidation, loginValidation, passwordValidation } = require("../validation");
 const dotenv = require("dotenv");
 const auth = require('./verifyToken');
+const Search = require('../model/Search');
 
 
 
@@ -57,6 +58,14 @@ router.post("/register", async (req,res) => {
         password: hpass,
         date: epoch
     })
+
+    const search = new Search({
+        type: "author",
+        referenceid: user._id,
+        name: user.username,
+        link: `/users/${user._id}`
+    })
+
     try {
         const newUser = await user.save();
         res.send({user: user._id});

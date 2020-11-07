@@ -26,7 +26,7 @@ const postValidation = (data) => {
     const schema = {
         title: Joi.string().min(8).max(32).required(),
         body: Joi.string().min(8).max(4096).required(),
-        image: Joi.string()
+        image: Joi.string().max(256)
     };
     return Joi.validate(data, schema)
 }

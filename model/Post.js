@@ -23,7 +23,10 @@ const postSchema = new mongoose.Schema({
         type: String
     },
     comments: {
-        type: [Buffer],
+        type: [Object],
+    },
+    ingredients: {
+        type: [Object]
     }
 
 });

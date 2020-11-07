@@ -21,6 +21,21 @@ router.post("/newingredient", auth, async (req,res) => {
         name: req.body.name,
         image: req.body.image
     });
+
+    const search = new Search({
+        type: "Ingredient",
+        referenceid: ingredient._id,
+        name: ingredient.name,
+        link: `/ingredients/${ingredient.name}`
+    });
+
+    try {
+        const newIng = await ingredient.save();
+        const newSearch = await search.save();
+        res.send(ingredient);
+    } catch (err) {
+        res.status(400).send(err);
+    }
 });
 
 

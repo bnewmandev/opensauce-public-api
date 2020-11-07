@@ -8,7 +8,7 @@ const authRoute = require("./routes/auth");
 const userInfoRoute = require("./routes/userinfo");
 const postRoute = require("./routes/postdata");
 const commentRoute = require("./routes/commentdata");
-const searchRoute = require("./routes/searchquery");
+const searchRoute = require("./routes/query");
 const adminRoute = require("./routes/admin");
 
 //Imports from .env

@@ -6,7 +6,7 @@ router.post('/ping', (req,res) => {
 });
 
 
-router.get('/query', async (req,res) => {
+router.get('/search', async (req,res) => {
     let regex = new RegExp(req.body.query, 'i');
     let rawList = await Search.find({name: regex});
     res.json({

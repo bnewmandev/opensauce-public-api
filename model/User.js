@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
     },
     accesslevel: {
         type: Number,
-        default: 0
+        default: 1
     }
 });
 

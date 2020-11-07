@@ -12,7 +12,7 @@ router.post('/ping', (req,res) => {
 
 router.post('/new', auth, async (req,res) => {
 
-    if(req.user.accesslevel < 5) res.status(401).send("Please contact an admin to reques post creation permission")
+    if(req.user.accesslevel < 4) res.status(401).send("Please contact an admin to reques post creation permission")
 
     let d = new Date();
     let epoch = d.getTime();

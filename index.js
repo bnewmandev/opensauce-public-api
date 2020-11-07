@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 //Import routes
 const authRoute = require("./routes/auth");
 const userInfoRoute = require("./routes/userinfo");
+const postRoute = require("./routes/postdata");
 
 //Imports from .env
 dotenv.config();
@@ -25,6 +26,7 @@ app.use(express.json())
 //Route Middlewares:    
 app.use('/api/user', authRoute); 
 app.use('/api/data', userInfoRoute);
+app.use('/api/post', postRoute);
 
 //sets port to 3000 and outputs success message to console
 app.listen(3000, () => console.log("Server Online")); 

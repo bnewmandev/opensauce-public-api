@@ -23,8 +23,8 @@ router.post("/register", async (req,res) => {
     if(error) return res.status(400).send(error)
 
     //Checking if username is already in the database
-    const usernameExist = await User.findOne({email: req.body.username})
-    if (!usernameExist) 
+    const usernameExist = await User.findOne({username: req.body.username})
+    if (usernameExist) 
     {
         res.status(400).send({
         userExist: true
@@ -32,7 +32,7 @@ router.post("/register", async (req,res) => {
 
     //Checking if email is already in the database
     const emailExist = await User.findOne({email: req.body.email})
-    if (!emailExist) 
+    if (emailExist) 
     {
         res.status(400).send({
         emailExist: true
@@ -42,16 +42,19 @@ router.post("/register", async (req,res) => {
     const salt = await bcrypt.genSalt(10);
     const hpass = await bcrypt.hash(req.body.password, salt);
 
+    let d = new Date();
+    let epoch = d.getTime();
 
     const user = new User({
         //Data that is recieved from the body of the post
         username: req.body.username,
         name: req.body.name,
         email: req.body.email,
-        password: hpass
+        password: hpass,
+        date: epoch
     })
     try {
-        const newUser = await user.save()
+        const newUser = await user.save();
         res.send({user: user._id});
     }
     catch(err) {

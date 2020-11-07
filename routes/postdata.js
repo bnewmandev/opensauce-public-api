@@ -3,7 +3,7 @@ const User = require("../model/User");
 const Post = require("../model/Post");
 const Comment = require("../model/Comment");
 const auth = require('./verifyToken');
-const { postValidation } = require("../validation");
+const { postValidation, deleteUserValidation } = require("../validation");
 
 router.post('/ping', (req,res) => {
     res.send("Pong!")
@@ -42,6 +42,22 @@ router.post('/new', auth, async (req,res) => {
         console.log("oof");
         res.status(400).send(err);
     }
+});
+
+
+router.post('/deletepost', auth, async (req,res) => {
+
+    const {error} = deleteUserValidation(req.body);
+    if(error) return res.status(401).send(error)
+
+    let user = await User.findById(req.user._id);
+    const post = await Post.findById(req.body.deletepost);
+    if (post.user == req.header.username)
+    {
+        //TODO: Delete post logic
+        res.send("Post has been deleted");
+    }
+    else res.status(401).send("Invalid Access Token")
 });
 
 

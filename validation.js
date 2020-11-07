@@ -1,3 +1,4 @@
+const { object } = require("@hapi/joi");
 const Joi = require("@hapi/joi");
 
 //Register validation
@@ -47,9 +48,27 @@ const passwordValidation = (data) => {
     return Joi.validate(data, schema)
 }
 
+//User change validation
+const userChangeValidation = (data) => {
+    const schema = {
+        biography: Joi.string().max(512),
+        favorites: Joi.object()
+    };
+    return Joi.validate(data, schema)
+}
+
+const deleteUserValidation = (data) => {
+    const schema = {
+        postid: Joi.number.required()
+    };
+    return Joi.validate(data, schema);
+}
+
 
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
 module.exports.postValidation = postValidation;
 module.exports.commentValidation = commentValidation;
 module.exports.passwordValidation = passwordValidation;
+module.exports.userChangeValidation = userChangeValidation;
+module.exports.deleteUserValidation = deleteUserValidation;

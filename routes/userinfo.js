@@ -1,5 +1,9 @@
 const router = require('express').Router();
 const auth = require('./verifyToken');
+const User = require("../model/User");
+const Post = require("../model/Post");
+const { userChangeValidation } = require("../validation");
+
 
 router.get('/ping', (req,res) => {
     res.json(
@@ -23,9 +27,14 @@ router.get('/userinfo', auth, (req, res) => {
     });
 });
 
+router.post('/edituser', auth, async (req,res) => {
 
+    const {error} = userChangeValidation(req.body);
+    if(error) return res.status(400).send(error)
 
+    if(req.body.biography) let bioData = await User.findByIdAndUpdate(req.user._id, {biography: req.body.biography});
+    if(req.body.favorites) let favData = await User.findByIdAndRemove(req.user._id, {favorites: req.body.favorites});
 
-
+});
 
 module.exports = router; 

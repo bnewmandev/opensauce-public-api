@@ -106,7 +106,6 @@ router.post('/changepassword', auth, async (req,res) => {
     const user = await User.findById(req.user._id)
     const {error} = passwordValidation(req.body);
     if(error) return res.status(400).send(error)
-    console.log(user.password);
     const salt = await bcrypt.genSalt(10);
     const hpass = await bcrypt.hash(req.body.newpassword, salt);
 

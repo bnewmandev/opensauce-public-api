@@ -1,0 +1,9 @@
+kind: pipeline
+name: default
+
+steps:
+- name: syntax
+  image: node
+  commands:
+  - node --check .
+  - npm lint -s

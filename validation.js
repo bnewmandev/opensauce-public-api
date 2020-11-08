@@ -1,69 +1,69 @@
-const { object } = require("@hapi/joi");
-const Joi = require("@hapi/joi");
+const { object } = require('@hapi/joi');
+const Joi = require('@hapi/joi');
 
-//Register validation
+// Register validation
 const registerValidation = (data) => {
-    const schema = {
-        username: Joi.string().min(6).max(16).required(),
-        name: Joi.string().min(3).max(32).required(),
-        email: Joi.string().email().min(6).max(32).required(),
-        password: Joi.string().min(6).max(32).required()
-    };
-    return Joi.validate(data, schema)
-}
+	const schema = {
+		username: Joi.string().min(6).max(16).required(),
+		name: Joi.string().min(3).max(32).required(),
+		email: Joi.string().email().min(6).max(32).required(),
+		password: Joi.string().min(6).max(32).required()
+	};
+	return Joi.validate(data, schema);
+};
 
-//Login validation
+// Login validation
 const loginValidation = (data) => {
-    const schema = {
-        username: Joi.string().min(6).max(16).required(),
-        password: Joi.string().min(6).max(32).required()
-    };
-    return Joi.validate(data, schema)
-}
+	const schema = {
+		username: Joi.string().min(6).max(16).required(),
+		password: Joi.string().min(6).max(32).required()
+	};
+	return Joi.validate(data, schema);
+};
 
-//Post validation
+// Post validation
 const postValidation = (data) => {
-    const schema = {
-        title: Joi.string().min(8).max(32).required(),
-        body: Joi.string().min(8).max(4096).required(),
-        image: Joi.string().max(256)
-    };
-    return Joi.validate(data, schema)
-}
+	const schema = {
+		title: Joi.string().min(8).max(32).required(),
+		body: Joi.string().min(8).max(4096).required(),
+		image: Joi.string().max(256)
+	};
+	return Joi.validate(data, schema);
+};
 
-//Comment Validation
+// Comment Validation
 const commentValidation = (data) => {
-    const schema = {
-        title: Joi.string().max(32).min(8).required(),
-        body: Joi.string().max(2048).min(8).required(),
-        postid: Joi.string().max(32).min(24).required()
-    };
-    return Joi.validate(data, schema)
-}
+	const schema = {
+		title: Joi.string().max(32).min(8).required(),
+		body: Joi.string().max(2048).min(8).required(),
+		postid: Joi.string().max(32).min(24).required()
+	};
+	return Joi.validate(data, schema);
+};
 
-//Password change validation
+// Password change validation
 const passwordValidation = (data) => {
-    const schema = {
-        newpassword: Joi.string().min(6).max(32).required()
-    };
-    return Joi.validate(data, schema)
-}
+	const schema = {
+		newpassword: Joi.string().min(6).max(32).required()
+	};
+	return Joi.validate(data, schema);
+};
 
-//User change validation
+// User change validation
 const userChangeValidation = (data) => {
-    const schema = {
-        biography: Joi.string().max(512),
-        favorites: Joi.object()
-    };
-    return Joi.validate(data, schema)
-}
+	const schema = {
+		biography: Joi.string().max(512),
+		favorites: Joi.object()
+	};
+	return Joi.validate(data, schema);
+};
 
 const deletePostValidation = (data) => {
-    const schema = {
-        postid: Joi.string().required()
-    };
-    return Joi.validate(data, schema);
-}
+	const schema = {
+		postid: Joi.string().required()
+	};
+	return Joi.validate(data, schema);
+};
 
 
 module.exports.registerValidation = registerValidation;

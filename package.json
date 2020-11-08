@@ -4,7 +4,9 @@
   "description": "Server that will handle backend of the website",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index"
+    "start": "node .",
+    "lint": "eslint . --fix",
+    "dev": "nodemon index"
   },
   "repository": {
     "type": "git",
@@ -21,6 +23,7 @@
   "homepage": "https://github.com/opensauce-uk/auth-server#readme",
   "dependencies": {
     "@hapi/joi": "^15.0.3",
+    "@opensauce/eslint-config": "github:opensauce-uk/eslint",
     "bcryptjs": "^2.4.3",
     "chalk": "^4.1.0",
     "dotenv": "^8.2.0",
@@ -29,6 +32,7 @@
     "mongoose": "^5.10.13"
   },
   "devDependencies": {
+    "eslint": "^7.13.0",
     "nodemon": "^2.0.6"
   }
 }

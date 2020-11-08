@@ -3,8 +3,9 @@ name: default
 
 steps:
 - name: syntax
-  image: node
+  image: node:12
   commands:
   - node --check .
   - npm install 
+
   - npm run lint -s

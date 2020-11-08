@@ -35,7 +35,8 @@ const postValidation = (data) => {
 const commentValidation = (data) => {
     const schema = {
         title: Joi.string().max(32).min(8).required(),
-        body: Joi.string().max(2048).min(8).required()
+        body: Joi.string().max(2048).min(8).required(),
+        postid: Joi.string().max(32).min(24).required()
     };
     return Joi.validate(data, schema)
 }
@@ -59,7 +60,7 @@ const userChangeValidation = (data) => {
 
 const deleteUserValidation = (data) => {
     const schema = {
-        postid: Joi.number.required()
+        postid: Joi.string().required()
     };
     return Joi.validate(data, schema);
 }

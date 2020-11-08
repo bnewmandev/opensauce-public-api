@@ -6,20 +6,20 @@ const auth = require('./verifyToken');
 const { postValidation, deleteUserValidation } = require("../validation");
 const Search = require('../model/Search');
 
-router.post('/ping', (req,res) => {
-    res.send("Pong!")
+router.get('/ping', (req,res) => {
+    res.send({message: "OK!"})
 });
 
 router.post('/new', auth, async (req,res) => {
 
-    if(req.user.accesslevel < 4) res.status(401).send("Please contact an admin to reques post creation permission")
+    if(req.user.accesslevel < 4) return res.status(401).send({error: "Please contact an admin to request the needed permissions to complete this operation", permission: "CREATE_POST"})
 
     let d = new Date();
     let epoch = d.getTime();
 
     //Validation
-    const {error} = postValidation(req.body);
-    if(error) return res.status(400).send(error)
+    const { error } = postValidation(req.body);
+    if(error) return res.status(400).send({error: error.details[0].message})
 
     const post = new Post({
         title: req.body.title,
@@ -28,8 +28,6 @@ router.post('/new', auth, async (req,res) => {
         body: req.body.body,
         comments: []
     });
-    console.log(post)
-
     const searchRecord = new Search({
         type: "Post",
         referenceid: post._id,
@@ -42,33 +40,32 @@ router.post('/new', auth, async (req,res) => {
         const u1 = await User.findOne({username: req.user.username})
         
         let postList = u1.posts;
-        console.log(postList);
         postList.push(post);
-        console.log("try");
         let doc = await User.findOneAndUpdate({username: req.user.username}, {posts: postList});
         const newPost = await post.save();
         const newRecord = await searchRecord.save();
-        res.send(post);
+        res.status(201).send({payload: post});
     } catch (err) {
-        console.log("oof");
-        res.status(400).send(err);
+        console.log(err)
+        res.status(400).send({error: err.message});
     }
 });
 
 
-router.post('/deletepost', auth, async (req,res) => {
+router.post('/delete', auth, async (req,res) => {
 
-    const {error} = deleteUserValidation(req.body);
-    if(error) return res.status(401).send(error)
+    const { error } = deleteUserValidation(req.body);
+    if (error) return res.status(401).send(error.details[0].message)
 
     let user = await User.findById(req.user._id);
-    const post = await Post.findById(req.body.deletepost);
-    if (post.user == req.header.username)
+    const post = await Post.findById(req.body.postid);
+    if (!post) return res.status(404).send({error: 'Could not find post to delete!'})
+    if (post.user == req.user.username)
     {
         //TODO: Delete post logic
-        res.send("Post has been deleted");
+        res.status(200).send({message: "Post has been deleted"});
     }
-    else res.status(401).send("Invalid Access Token")
+    else res.status(401).send({error: "Access Token provided is invalid"})
 });
 
 

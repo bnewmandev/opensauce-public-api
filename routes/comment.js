@@ -4,9 +4,10 @@ const Post = require("../model/Post");
 const Comment = require("../model/Comment");
 const auth = require('./verifyToken');
 const { postValidation, commentValidation } = require("../validation");
+const util = require('../lib/util');
 
-router.post("/ping", (req,res) => {
-    res.send("Pong!");
+router.get("/ping", (req,res) => {
+    res.status(200).send({message: "OK!"});
 });
 
 router.post("/new", auth, async (req,res) => {
@@ -15,9 +16,8 @@ router.post("/new", auth, async (req,res) => {
     let epoch = d.getTime();
 
     //Validation
-    const {error} = commentValidation(req.body);
-    if(error) return res.status(400).send(error);
-
+    const { error } = commentValidation(req.body);
+    if (error) return res.status(400).send({error: error.details[0].message});
     const comment = new Comment({
         title: req.body.title,
         user: req.user.username,
@@ -25,19 +25,21 @@ router.post("/new", auth, async (req,res) => {
         body: req.body.body,
         postid: req.body.postid
     });
-    console.log(comment);
     try {
         const post = await Post.findById(comment.postid);
-        console.log(post);
+        if (!post) return res.status(500).send({error: "No post found!"})
         let postComments = post.comments;
         postComments.push(comment);
         let doc = await Post.findByIdAndUpdate(comment.postid, {comments: postComments});
         const newDoc = await comment.save();
-        res.send(comment);
+        res.status(201).send({
+            message: "Comment was successfully posted",
+            payload: comment
+        });
     }
     catch (err){
-        console.log("oof");
-        res.status(400).send(err);
+        util.error(err)
+        res.status(400).send({error: err.message});
     }
 });
 

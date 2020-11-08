@@ -10,6 +10,6 @@ module.exports = function(req,res,next)
         req.user = verified;
         next();
     } catch(err){
-        res.status(400).send({error: "Token provided was invalid"});
+        res.status(401).send({error: "Token provided was invalid"});
     }
 }

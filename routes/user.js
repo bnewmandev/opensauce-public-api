@@ -51,7 +51,7 @@ router.get("/ping", (req,res) => {
         name: req.body.name,
         email: req.body.email,
         password: hpass,
-        date: epoch
+        created_at: epoch
     })
 
     const search = new Search({
@@ -85,14 +85,14 @@ router.post('/login', async (req, res) => {
     // Checking if username is already in the database
     const user = await User.findOne({username: req.body.username})
     console.log(user);
-    if (!user) res.status(400).send({
+    if (!user) res.status(404).send({
         error: "The username you entered does not exist.", 
         userExist: false
     });
 
     // Checking if password is correct
     const validPass = await bcrypt.compare(req.body.password, user.password);
-    if(!validPass) return res.status(400).send({
+    if(!validPass) return res.status(401).send({
         error: "The password you entered wasn't correct",
         validPassword: false 
     });
@@ -103,11 +103,11 @@ router.post('/login', async (req, res) => {
         name: user.name,
         username: user.username,
         email: user.email,
-        date: user.date,
+        created_at: user.created_at,
         favorites: user.favorites,
         profilepicture: user.profilepicture,
         biography: user.bio,
-        accesslevel: user.accesslevel
+        accesslevel: user.permissions
     }, process.env.TOKEN_SECRET);
 
     res.header('auth-token', token);
@@ -140,7 +140,6 @@ router.get('/info', auth, (req, res) => {
             favorites: req.user.favorites,
             profilepicture: req.user.profilepicture,
             biography: req.user.biography,
-            posts: req.user.posts
     });
 });
 

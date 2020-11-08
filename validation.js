@@ -58,7 +58,7 @@ const userChangeValidation = (data) => {
     return Joi.validate(data, schema)
 }
 
-const deleteUserValidation = (data) => {
+const deletePostValidation = (data) => {
     const schema = {
         postid: Joi.string().required()
     };
@@ -72,4 +72,4 @@ module.exports.postValidation = postValidation;
 module.exports.commentValidation = commentValidation;
 module.exports.passwordValidation = passwordValidation;
 module.exports.userChangeValidation = userChangeValidation;
-module.exports.deleteUserValidation = deleteUserValidation;
+module.exports.deleteUserValidation = deletePostValidation;

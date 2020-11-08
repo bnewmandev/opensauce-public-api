@@ -54,7 +54,7 @@ router.post('/new', auth, async (req,res) => {
 
 router.post('/delete', auth, async (req,res) => {
 
-    const { error } = deleteUserValidation(req.body);
+    const { error } = deletePostValidation(req.body);
     if (error) return res.status(401).send(error.details[0].message)
 
     let user = await User.findById(req.user._id);

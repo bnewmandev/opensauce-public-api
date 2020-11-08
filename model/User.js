@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         required: true,
         max: 1024
     },
-    date: {
+    created_at: {
         type: Number,
         required: true
     },
@@ -42,9 +42,9 @@ const userSchema = new mongoose.Schema({
     posts: {
         type: [Object]
     },
-    accesslevel: {
-        type: Number,
-        default: 1
+    permissions: {
+        type: [String],
+        default: ["ADD_COMMENT", "EDIT_COMMENT", "DELETE_COMMENT"]
     }
 });
 

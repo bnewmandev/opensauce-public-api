@@ -6,4 +6,5 @@ steps:
   image: node
   commands:
   - node --check .
+  - npm install 
   - npm run lint -s

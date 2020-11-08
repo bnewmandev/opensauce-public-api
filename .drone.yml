@@ -6,4 +6,4 @@ steps:
   image: node
   commands:
   - node --check .
-  - npm lint -s
+  - npm run lint -s

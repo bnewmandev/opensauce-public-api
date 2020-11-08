@@ -7,5 +7,4 @@ steps:
   commands:
   - node --check .
   - npm install 
-
-  - npm run lint -s
+  - npm run lint

@@ -10,11 +10,11 @@ const Ingredient = require('../model/Ingredient');
 
 
 router.post('/ping', (req, res) => {
-	res.send('Pong!');
+	res.status(200).send({ message: 'OK!' });
 });
 
-router.post('/newingredient', auth, async (req, res) => {
-	if (req.user.accesslevel < 10) res.status(401).send('Access level must be greater than 10 for access');
+router.post('/ingredient/add', auth, async (req, res) => {
+	if (req.user.accesslevel < 10) { return res.status(403).send({ error: 'Please contact an admin to request the needed permission to perform this operation', permission: 'ADD_INGREDIENT' }); }
 
 	const ingredient = new Ingredient({
 		name: req.body.name,
@@ -31,9 +31,9 @@ router.post('/newingredient', auth, async (req, res) => {
 	try {
 		const newIng = await ingredient.save();
 		const newSearch = await search.save();
-		res.send(ingredient);
+		res.status(201).send({ payload: ingredient });
 	} catch (err) {
-		res.status(400).send(err);
+		res.status(400).send({ error: err.message });
 	}
 });
 

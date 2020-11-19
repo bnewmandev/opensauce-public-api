@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema({
 		type: Object,
 		max: 32
 	},
-	profilepicture: {
+	avatar: {
 		type: String,
 		default: 'https://cdn.opensauce.uk/assets/global/Account.png',
 		max: 64
@@ -39,12 +39,13 @@ const userSchema = new mongoose.Schema({
 		default: 'Hello World!',
 		max: 1024
 	},
-	posts: {
-		type: [Object]
-	},
 	permissions: {
 		type: [String],
 		default: ['ADD_COMMENT', 'EDIT_COMMENT', 'DELETE_COMMENT']
+	},
+	role: {
+		type: String,
+		default: 'User'
 	}
 });
 

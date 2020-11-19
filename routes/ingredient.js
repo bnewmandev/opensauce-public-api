@@ -1,20 +1,17 @@
 const router = require('express').Router();
-const User = require('../model/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const { registerValidation, loginValidation, passwordValidation } = require('../validation');
-const dotenv = require('dotenv');
 const auth = require('./verifyToken');
 const Search = require('../model/Search');
 const Ingredient = require('../model/Ingredient');
-
+const util = require('../lib/util');
 
 router.post('/ping', (req, res) => {
 	res.status(200).send({ message: 'OK!' });
 });
 
-router.post('/ingredient/add', auth, async (req, res) => {
-	if (req.user.accesslevel < 10) { return res.status(403).send({ error: 'Please contact an admin to request the needed permission to perform this operation', permission: 'ADD_INGREDIENT' }); }
+router.post('/add', auth, async (req, res) => {
+	if (!util.checkPermission(req.user, 'ADD_INGREDIENT')) {
+		return res.status(403).send({ error: 'Please contact an admin to request the needed permission to perform this operation', permission: 'ADD_INGREDIENT' });
+	}
 
 	const ingredient = new Ingredient({
 		name: req.body.name,

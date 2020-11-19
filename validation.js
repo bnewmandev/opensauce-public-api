@@ -44,7 +44,8 @@ const commentValidation = (data) => {
 // Password change validation
 const passwordValidation = (data) => {
 	const schema = {
-		newpassword: Joi.string().min(6).max(32).required()
+		new_password: Joi.string().min(6).max(32).required(),
+		old_password: Joi.string().min(6).max(32).required()
 	};
 	return Joi.validate(data, schema);
 };
@@ -72,4 +73,4 @@ module.exports.postValidation = postValidation;
 module.exports.commentValidation = commentValidation;
 module.exports.passwordValidation = passwordValidation;
 module.exports.userChangeValidation = userChangeValidation;
-module.exports.deleteUserValidation = deletePostValidation;
+module.exports.deletePostValidation = deletePostValidation;

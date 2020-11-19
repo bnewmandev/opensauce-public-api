@@ -20,7 +20,7 @@ router.post('/new', auth, async (req, res) => {
 	const comment = new Comment({
 		title: req.body.title,
 		user: req.user.username,
-		date: epoch,
+		created_at: epoch,
 		body: req.body.body,
 		postid: req.body.postid
 	});

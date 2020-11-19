@@ -2,23 +2,23 @@ const router = require('express').Router();
 const User = require('../model/User');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { registerValidation, loginValidation, passwordValidation } = require('../validation');
+const { registerValidation, loginValidation, passwordValidation, userChangeValidation } = require('../validation');
 const dotenv = require('dotenv');
 const auth = require('./verifyToken');
 const Search = require('../model/Search');
-
+const blacklist = require('../lib/blacklist.json');
 dotenv.config();
 
 router.get('/ping', (req, res) => {
-	res.status(200).send({ message: 'OK!' });
+	res.status(200).send({ message: 'OK!'});
 });
 
 // Create user
 router.post('/register', async (req, res) => {
 	// Validation
 	const { error } = registerValidation(req.body);
-	if (error) { return res.status(400).send({ error: error.details[0].message }); }
-
+	if (error) return res.status(400).send({ error: error.details[0].message }); 
+	if (blacklist.usernames.includes(req.body.username)) return res.status(403).send({error: 'The username you entered has been blacklisted'})
 	// Checking if username is already in the database
 	const usernameExist = await User.findOne({ username: req.body.username });
 	if (usernameExist) {
@@ -80,7 +80,6 @@ router.post('/login', async (req, res) => {
 
 	// Checking if username is already in the database
 	const user = await User.findOne({ username: req.body.username });
-	console.log(user);
 	if (!user) {
 		res.status(404).send({
 			error: 'The username you entered does not exist.',
@@ -88,6 +87,8 @@ router.post('/login', async (req, res) => {
 		});
 	}
 
+	// If user doesn't exist?
+	if (!user) res.status(404).send('The user does not exist!');
 	// Checking if password is correct
 	const validPass = await bcrypt.compare(req.body.password, user.password);
 	if (!validPass) {
@@ -105,23 +106,24 @@ router.post('/login', async (req, res) => {
 		email: user.email,
 		created_at: user.created_at,
 		favorites: user.favorites,
-		profilepicture: user.profilepicture,
+		avatar: user.avatar,
 		biography: user.bio,
-		accesslevel: user.permissions
+		permissions: user.permissions,
+		role: user.role
 	}, process.env.TOKEN_SECRET);
 
-	res.header('auth-token', token);
+	res.header('Authorization', token);
 
 	res.status(200).send({ message: 'Login Successful' });
 });
 
 
-router.post('/password/change', auth, async (req, res) => {
+router.put('/password/change', auth, async (req, res) => {
 	const user = await User.findById(req.user._id);
 	const { error } = passwordValidation(req.body);
 	if (error) { return res.status(400).send({ error: error.details[0].message }); }
 	const salt = await bcrypt.genSalt(10);
-	const hpass = await bcrypt.hash(req.body.newpassword, salt);
+	const hpass = await bcrypt.hash(req.body.new_password, salt);
 
 	const doc = await User.findByIdAndUpdate(req.user._id, { password: hpass });
 
@@ -129,36 +131,41 @@ router.post('/password/change', auth, async (req, res) => {
 });
 
 router.get('/info', auth, (req, res) => {
-	res.json(
-		{
-			_id: req.user._id,
-			username: req.user.username,
-			name: req.user.name,
-			email: req.user.email,
-			date: req.user.date,
-			favorites: req.user.favorites,
-			profilepicture: req.user.profilepicture,
-			biography: req.user.biography
-		});
-});
-
-router.post('/user/edit', auth, async (req, res) => {
-	const { error } = userChangeValidation(req.body);
-	if (error) { return res.status(400).send(error); }
-	let bioData = null;
-	let favData = null;
-	if (req.body.biography) {
-		console.log(req.user._id);
-		bioData = await User.findByIdAndUpdate(req.user._id, { biography: req.body.biography });
-	}
-	if (req.body.favorites) {
-		favData = await User.findByIdAndUpdate(req.user._id, { favorites: req.body.favorites });
-	}
-
-	res.send({
-		biography: req.body.biography,
-		favorites: req.body.favorites
+	res.json({
+		_id: req.user._id,
+		username: req.user.username,
+		name: req.user.name,
+		email: req.user.email,
+		date: req.user.date,
+		favorites: req.user.favorites,
+		avatar: req.user.avatar,
+		biography: req.user.biography
 	});
 });
+
+router.put('/edit', auth, async (req, res) => {
+	const { error } = userChangeValidation(req.body);
+	if (error) return res.status(400).send({ error: error.details[0].message });
+	let biography;
+	let favorites;
+	let avatar;
+	if (req.body.biography) biography = await User.findByIdAndUpdate(req.user._id, { biography: req.body.biography });
+	if (req.body.favorites) favorites = await User.findByIdAndUpdate(req.user._id, { favorites: req.body.favorites });
+	if (req.body.avatar) avatar = await User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar });
+
+	res.send({
+		payload: {
+			user: {
+				id: req.user.id,
+				username: req.user.username,
+				avatar: req.body.avatar,
+				biography: req.body.biography,
+				favorites: req.body.favorites
+			}
+		} 
+	});
+});
+
+
 // Exports the file as a module
 module.exports = router;

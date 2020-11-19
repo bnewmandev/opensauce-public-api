@@ -5,13 +5,14 @@ const Comment = require('../model/Comment');
 const auth = require('./verifyToken');
 const { postValidation, deleteUserValidation } = require('../validation');
 const Search = require('../model/Search');
+const util = require('../lib/util');
 
 router.get('/ping', (req, res) => {
 	res.send({ message: 'OK!' });
 });
 
 router.post('/new', auth, async (req, res) => {
-	if (req.user.accesslevel < 4) { return res.status(401).send({ error: 'Please contact an admin to request the needed permissions to complete this operation', permission: 'CREATE_POST' }); }
+	if (!util.checkPermission(req.user, 'CREATE_POST')) { return res.status(401).send({ error: 'Please contact an admin to request the needed permissions to complete this operation', permission: 'CREATE_POST' }); }
 
 	const d = new Date();
 	const epoch = d.getTime();
@@ -23,7 +24,7 @@ router.post('/new', auth, async (req, res) => {
 	const post = new Post({
 		title: req.body.title,
 		user: req.user.username,
-		date: epoch,
+		created_at: epoch,
 		body: req.body.body,
 		comments: []
 	});

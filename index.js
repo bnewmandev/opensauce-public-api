@@ -9,7 +9,8 @@ const userRoute = require('./routes/user');
 const postRoute = require('./routes/post');
 const commentRoute = require('./routes/comment');
 const searchRoute = require('./routes/query');
-const adminRoute = require('./routes/admin');
+const permissionsRoute = require('./routes/permissions');
+const ingredientRoute = require('./routes/ingredient');
 
 // Imports from .env
 dotenv.config();
@@ -39,7 +40,8 @@ app.use('/api/user', userRoute);
 app.use('/api/post', postRoute);
 app.use('/api/comment', commentRoute);
 app.use('/api/search', searchRoute);
-app.use('/api/admin', adminRoute);
+app.use('/api/admin/users/', permissionsRoute);
+app.use('/api/ingredient', ingredientRoute);
 
 // sets port to port defined in env and outputs success message to console
-app.listen(3000, () => util.log(`Server Online on port ${port}`));
+app.listen(port, () => util.log(`Server Online on port ${port}`));

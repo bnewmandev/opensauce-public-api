@@ -55,6 +55,7 @@
 		"no-invalid-this": "warn",
         "no-unused-vars": "warn",
 		"no-lone-blocks": "warn",
+		"no-mixed-spaces-and-tabs": "warn",
 		"no-multi-spaces": "warn",
 		"no-new-func": "warn",
 		"no-new-wrappers": "warn",
@@ -76,7 +77,7 @@
 		"no-label-var": "warn",
 		"no-shadow": "warn",
 		"no-undef-init": "warn",
-        "no-undef": "warn",
+        "no-undef": "error",
 
 		"callback-return": "warn",
 		"handle-callback-err": "warn",

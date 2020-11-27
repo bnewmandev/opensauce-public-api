@@ -7,18 +7,19 @@ const dotenv = require('dotenv');
 const auth = require('./verifyToken');
 const Search = require('../model/Search');
 const blacklist = require('../lib/blacklist.json');
+const util = require('../lib/util');
 dotenv.config();
 
 router.get('/ping', (req, res) => {
-	res.status(200).send({ message: 'OK!'});
+	res.status(200).send({ message: 'OK!' });
 });
 
 // Create user
 router.post('/register', async (req, res) => {
 	// Validation
 	const { error } = registerValidation(req.body);
-	if (error) return res.status(400).send({ error: error.details[0].message }); 
-	if (blacklist.usernames.includes(req.body.username)) return res.status(403).send({error: 'The username you entered has been blacklisted'})
+	if (error) return res.status(400).send({ error: error.details[0].message });
+	if (blacklist.usernames.includes(req.body.username)) return res.status(403).send({ error: 'The username you entered has been blacklisted' });
 	// Checking if username is already in the database
 	const usernameExist = await User.findOne({ username: req.body.username });
 	if (usernameExist) {
@@ -63,7 +64,8 @@ router.post('/register', async (req, res) => {
 	try {
 		const newUser = await user.save();
 		const newSearch = await search.save();
-		res.status(201).send({
+		await util.sendRegisterEmail(user);
+		return res.status(201).send({
 			message: 'Successfully created user',
 			user: user._id
 		});
@@ -108,7 +110,6 @@ router.post('/login', async (req, res) => {
 		favorites: user.favorites,
 		avatar: user.avatar,
 		biography: user.bio,
-		permissions: user.permissions,
 		role: user.role
 	}, process.env.TOKEN_SECRET);
 
@@ -130,16 +131,17 @@ router.put('/password/change', auth, async (req, res) => {
 	res.status(200).send({ message: 'Password Changed Successfully' });
 });
 
-router.get('/info', auth, (req, res) => {
-	res.json({
-		_id: req.user._id,
-		username: req.user.username,
-		name: req.user.name,
-		email: req.user.email,
-		date: req.user.date,
-		favorites: req.user.favorites,
-		avatar: req.user.avatar,
-		biography: req.user.biography
+router.get('/info', auth, async (req, res) => {
+	const user = await User.findById(req.user._id);
+	return res.json({
+		id: user._id,
+		username: user.username,
+		name: user.name,
+		email: user.email,
+		date: user.date,
+		favorites: user.favorites,
+		avatar: user.avatar,
+		biography: user.biography
 	});
 });
 
@@ -151,9 +153,10 @@ router.put('/edit', auth, async (req, res) => {
 	let avatar;
 	if (req.body.biography) biography = await User.findByIdAndUpdate(req.user._id, { biography: req.body.biography });
 	if (req.body.favorites) favorites = await User.findByIdAndUpdate(req.user._id, { favorites: req.body.favorites });
-	if (req.body.avatar) avatar = await User.findByIdAndUpdate(req.user._id, { avatar: req.body.avatar });
+	if (req.body.avatar) avatar = await User.updateOne({ id: req.user._id }, { avatar: req.body.avatar });
 
-	res.send({
+
+	return res.send({
 		payload: {
 			user: {
 				id: req.user.id,
@@ -162,7 +165,7 @@ router.put('/edit', auth, async (req, res) => {
 				biography: req.body.biography,
 				favorites: req.body.favorites
 			}
-		} 
+		}
 	});
 });
 

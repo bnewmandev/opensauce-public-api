@@ -10,13 +10,13 @@ router.post('/ping', (req, res) => {
 router.put('/:username/permissions/add', auth, async (req, res) => {
 	// Check if User can change permissions
 	if (!util.checkPermission(req.user, 'ADD_PERMISSIONS')) return res.status(403).send({ error: 'Please contact an admin to request the needed permission to perform this operation', permission: 'ADD_PERMISSIONS' });
-	const user = await User.findOne({ username: req.params.username })
+	const user = await User.findOne({ username: req.params.username });
 	// check if the user is available
 	if (!user) return res.status(404).send({ error: 'Could not find user!' });
 	// grab permissions
 	let permission = user.permissions;
 	const permissions_added = req.body.permissions;
-	if (!permissions_added.length) return res.status(400).send({ error: 'Permissions to be added is empty!' })
+	if (!permissions_added.length) return res.status(400).send({ error: 'Permissions to be added is empty!' });
 	// add permissions to the array
 	let i;
 	for (i = 0; i < permissions_added.length; i++) {
@@ -51,7 +51,7 @@ router.put('/:username/permissions/add', auth, async (req, res) => {
 router.delete('/:username/permissions/remove', auth, async (req, res) => {
 	// Check if User can change permissions
 	if (!util.checkPermission(req.user, 'REMOVE_PERMISSIONS')) return res.status(403).send({ error: 'Please contact an admin to request the needed permission to perform this operation', permission: 'REMOVE_PERMISSIONS' });
-	const user = await User.findOne({ username: req.body.username })
+	const user = await User.findOne({ username: req.body.username });
 	// check if the user is available
 	if (!user) return res.status(404).send({ error: 'Could not find user!' });
 	// grab permissions
@@ -91,7 +91,7 @@ router.delete('/:username/permissions/remove', auth, async (req, res) => {
 router.post('/:username/permissions/reset', auth, async (req, res) => {
 	// Check if User can change permissions
 	if (!util.checkPermission(req.user, 'RESET_PERMISSIONS')) return res.status(403).send({ error: 'Please contact an admin to request the needed permission to perform this operation', permission: 'RESET_PERMISSIONS' });
-	const user = await User.findOne({ username: req.params.username })
+	const user = await User.findOne({ username: req.params.username });
 	// check if the user is available
 	if (!user) return res.status(404).send({ error: 'Could not find user!' });
 	const default_perms = User.schema.paths.permissions.options.default;
@@ -120,7 +120,7 @@ router.post('/:username/permissions/reset', auth, async (req, res) => {
 // Get Permissions for User
 router.get('/:username/permissions', auth, async (req, res) => {
 	if (!util.checkPermission(req.user, 'GET_PERMISSIONS')) return res.status(403).send({ error: 'Please contact an admin to request the needed permission to perform this operation', permission: 'GET_PERMISSIONS' });
-	const user = await User.findOne({ username: req.params.username })
+	const user = await User.findOne({ username: req.params.username });
 	// check if the user is available
 	if (!user.username) return res.status(404).send({ error: 'Could not find user!' });
 	const payload = {

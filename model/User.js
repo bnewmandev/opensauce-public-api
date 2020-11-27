@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
 	},
 	permissions: {
 		type: [String],
-		default: ['ADD_COMMENT', 'EDIT_COMMENT', 'DELETE_COMMENT']
+		default: ['ADD_COMMENT', 'EDIT_COMMENT']
 	},
 	role: {
 		type: String,

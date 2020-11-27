@@ -28,7 +28,7 @@ router.post('/add', auth, async (req, res) => {
 	try {
 		const newIng = await ingredient.save();
 		const newSearch = await search.save();
-		res.status(201).send({ payload: ingredient });
+		res.status(201).send({ message: 'Successfully created Ingredient', payload: ingredient, action: 'CREATED_INGREDIENT' });
 	} catch (err) {
 		res.status(400).send({ error: err.message });
 	}

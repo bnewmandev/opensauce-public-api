@@ -19,7 +19,7 @@ const port = process.env.PORT;
 // Connect to database
 mongoose.connect(
 	process.env.DB_CONNECT,
-	{ useNewUrlParser: true, useUnifiedTopology: true },
+	{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false },
 	() => util.log('connected to database')
 );
 
@@ -37,7 +37,7 @@ app.use(express.json());
 
 // Route Middlewares:
 app.use('/api/user', userRoute);
-app.use('/api/post', postRoute);
+app.use('/api/posts', postRoute);
 app.use('/api/comment', commentRoute);
 app.use('/api/search', searchRoute);
 app.use('/api/admin/users/', permissionsRoute);

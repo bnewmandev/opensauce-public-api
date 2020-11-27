@@ -22,9 +22,6 @@ const postSchema = new mongoose.Schema({
 	image: {
 		type: String
 	},
-	comments: {
-		type: [Object]
-	},
 	ingredients: {
 		type: [Object]
 	}

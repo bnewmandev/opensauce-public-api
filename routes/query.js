@@ -8,7 +8,7 @@ router.post('/ping', (req, res) => {
 
 router.get('/search', async (req, res) => {
 	const regex = new RegExp(req.body.query, 'i');
-	const rawList = await Search.find({ name: regex });
+	const rawList = await Search.find({ name: regex }).select('-__v');
 	res.json({
 		results: rawList
 	});

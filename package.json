@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node .",
     "lint": "eslint . --fix",
+    "build": "npm ci",
     "dev": "nodemon index"
   },
   "repository": {
